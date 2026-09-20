@@ -83,7 +83,13 @@
   .addStatus { font-size: 12px; color: #a89e88; text-align: center; min-height: 16px; }
   .addStatus.err { color: #c97b6b; }
   .addStatus.ok { color: #9db98a; }
-  .offlineNote { text-align: center; font-size: 11px; color: #6f6656; margin-top: 10px; }
+  .offlineNote { text-align: center; font-size: 11px; color: #6f6656; margin-top: 10px; line-height: 1.6; }
+  .seedBtn {
+    display: block; margin: 16px auto 0; font-family: inherit; font-size: 12px;
+    padding: 8px 14px; border-radius: 3px; border: 1px dashed var(--brass);
+    background: none; color: var(--brass); cursor: pointer;
+  }
+  .seedBtn:hover { background: rgba(169,121,60,0.12); }
 </style>
 </head>
 <body>
@@ -123,18 +129,40 @@
         <button type="submit" id="submitBtn">Add item</button>
         <div class="addStatus" id="addStatus"></div>
       </form>
-      <p class="offlineNote" id="offlineNote" style="display:none;">Adding isn't available in this view — search still works.</p>
+      <p class="offlineNote" id="offlineNote" style="display:none;"></p>
+      <button id="seedBtn" class="seedBtn" type="button" style="display:none;">Import starter data (154 items)</button>
     </div>
   </div>
 
-<script>
-(function () {
-  // Fallback snapshot, used for instant first paint and if the live store
-  // isn't available. Once the db capability resolves, live data takes over.
-  const FALLBACK = {"tubs": ["TUB A", "TUB B", "TUB C"], "boxes": [{"name": "BOX 001", "tub": "TUB A"}, {"name": "BOX 002", "tub": "TUB A"}, {"name": "BOX 003", "tub": "TUB A"}, {"name": "BOX 004", "tub": "TUB A"}, {"name": "BOX 005", "tub": "TUB A"}, {"name": "BOX 006", "tub": "TUB A"}, {"name": "BOX 008 - General Magic", "tub": "TUB B"}, {"name": "BOX 009", "tub": "TUB B"}, {"name": "BOX 010", "tub": "TUB B"}, {"name": "BOX 011 - General Magic", "tub": "TUB B"}, {"name": "BOX 013", "tub": "TUB C"}, {"name": "BOX 014 (clear, unmarked tub)", "tub": "TUB C"}], "items": [{"item": "desk organizers", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "puzzle game knickknacks", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "cork sheets", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "cutting board", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "wood burner", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "hot glue gun & sticks", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "3Doodler", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "hypertiles", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "string/twine/thread", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "knives & needles", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "small shelf liner material", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "rubberbands", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "scrub sponges", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "tape/glue/staples", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "stapler", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "CA glue brushes", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "RGB glasses", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "heat gun", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "3 ring binder", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "address labels", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "measuring tapes", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "jewelers pliers set", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "elastic band & bendable ring strap", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "iPhone lens connectors", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "ziplock bags (various sizes)", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "various hardware (bearings, washers, bbs, lazy susan, etc)", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "whetstone", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "USB drives", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "3D printed phone stand", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "collected business cards", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "bubble mailers", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "harmonicas", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "utility tray", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "ink pad", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "Incurring supplies", "container": "BOX 001", "tub": "TUB A"}, {"item": "French curves", "container": "BOX 001", "tub": "TUB A"}, {"item": "square", "container": "BOX 001", "tub": "TUB A"}, {"item": "protractor", "container": "BOX 001", "tub": "TUB A"}, {"item": "colored sharpies", "container": "BOX 001", "tub": "TUB A"}, {"item": "Seance Game", "container": "BOX 002", "tub": "TUB A"}, {"item": "Leatherwork supplies", "container": "BOX 003", "tub": "TUB A"}, {"item": "16mm die punch", "container": "BOX 003", "tub": "TUB A"}, {"item": "Chisels and files", "container": "BOX 004", "tub": "TUB A"}, {"item": "Wood craft materials", "container": "BOX 005", "tub": "TUB A"}, {"item": "Binder Clips", "container": "BOX 006", "tub": "TUB A"}, {"item": "New playing cards", "container": "TUB B (loose)", "tub": "TUB B"}, {"item": "used playing cards", "container": "TUB B (loose)", "tub": "TUB B"}, {"item": "old playing cards", "container": "TUB B (loose)", "tub": "TUB B"}, {"item": "metal bits", "container": "TUB B (loose)", "tub": "TUB B"}, {"item": "wallets and coin purses", "container": "TUB B (loose)", "tub": "TUB B"}, {"item": "dice", "container": "TUB B (loose)", "tub": "TUB B"}, {"item": "coins", "container": "TUB B (loose)", "tub": "TUB B"}, {"item": "Stroop Test boards - original", "container": "TUB B (loose)", "tub": "TUB B"}, {"item": "TIDE keepsakes", "container": "TUB B (loose)", "tub": "TUB B"}, {"item": "Sven pads", "container": "TUB B (loose)", "tub": "TUB B"}, {"item": "Spongeballs", "container": "TUB B (loose)", "tub": "TUB B"}, {"item": "dice tray", "container": "TUB B (loose)", "tub": "TUB B"}, {"item": "Hooked", "container": "TUB B (loose)", "tub": "TUB B"}, {"item": "QR code trick", "container": "TUB B (loose)", "tub": "TUB B"}, {"item": "origami microfiber", "container": "TUB B (loose)", "tub": "TUB B"}, {"item": "bubbles", "container": "TUB B (loose)", "tub": "TUB B"}, {"item": "Ball Escape", "container": "TUB B (loose)", "tub": "TUB B"}, {"item": "glass marbles & paperweight", "container": "TUB B (loose)", "tub": "TUB B"}, {"item": "2x finger ring", "container": "TUB B (loose)", "tub": "TUB B"}, {"item": "sponge ball holdout", "container": "TUB B (loose)", "tub": "TUB B"}, {"item": "dice tray", "container": "TUB B (loose)", "tub": "TUB B"}, {"item": "number decoder group game", "container": "TUB B (loose)", "tub": "TUB B"}, {"item": "large kitchen matches", "container": "TUB B (loose)", "tub": "TUB B"}, {"item": "Large baby blanket", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "Flash cards memorized deck instructions", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "little thief instructions", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "persona box", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "they by Alan Rorrison", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "Brimz stickers", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "Chroma", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "Prophecy Pen", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "invisible elastic", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "binary trick laminated", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "clear force bag", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "rocky", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "aluminum cups", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "production bag (lunch sack)", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "thumb tips x2", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "black handkerchiefs x2", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "white handkerchiefs", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "Chinese sticks", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "birthday candle repeat", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "Point picture dictionary for travelers", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "shaped rubber bands", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "3D printed breakaway wand", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "Rubik's cube shaker", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "dice shaker", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "thumb tip holder", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "crazy cube", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "alien hand & cookie", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "Savant Deck box", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "card reveal condoms", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "Gimmicked and gaffed cards", "container": "BOX 009", "tub": "TUB B"}, {"item": "roughing sticks", "container": "BOX 009", "tub": "TUB B"}, {"item": "Ropes", "container": "BOX 010", "tub": "TUB B"}, {"item": "paracord", "container": "BOX 010", "tub": "TUB B"}, {"item": "Coin slide", "container": "BOX 011 - General Magic", "tub": "TUB B"}, {"item": "firefly", "container": "BOX 011 - General Magic", "tub": "TUB B"}, {"item": "white chalk", "container": "BOX 011 - General Magic", "tub": "TUB B"}, {"item": "custom matchbox", "container": "BOX 011 - General Magic", "tub": "TUB B"}, {"item": "origami card box", "container": "BOX 011 - General Magic", "tub": "TUB B"}, {"item": "mousepads x2", "container": "BOX 011 - General Magic", "tub": "TUB B"}, {"item": "bell", "container": "BOX 011 - General Magic", "tub": "TUB B"}, {"item": "mini clothespins", "container": "BOX 011 - General Magic", "tub": "TUB B"}, {"item": "3D printed wooden ring", "container": "BOX 011 - General Magic", "tub": "TUB B"}, {"item": "large spring", "container": "BOX 011 - General Magic", "tub": "TUB B"}, {"item": "small brown gift boxes", "container": "BOX 011 - General Magic", "tub": "TUB B"}, {"item": "wooden playing card box", "container": "BOX 011 - General Magic", "tub": "TUB B"}, {"item": "wooden hinged box", "container": "BOX 011 - General Magic", "tub": "TUB B"}, {"item": "tiny wood turned box", "container": "BOX 011 - General Magic", "tub": "TUB B"}, {"item": "hinged aluminum tin", "container": "BOX 011 - General Magic", "tub": "TUB B"}, {"item": "plastic cylindrical box", "container": "BOX 011 - General Magic", "tub": "TUB B"}, {"item": "wooden number chips", "container": "BOX 011 - General Magic", "tub": "TUB B"}, {"item": "3D color vision", "container": "BOX 011 - General Magic", "tub": "TUB B"}, {"item": "saxophone", "container": "BOX 011 - General Magic", "tub": "TUB B"}, {"item": "Sven pads (another one bites the dust, bull shark)", "container": "BOX 011 - General Magic", "tub": "TUB B"}, {"item": "2 way notepads x2", "container": "BOX 011 - General Magic", "tub": "TUB B"}, {"item": "Antique boxes and magic", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "braille box", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "hexadecimal puzzle", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "bits n bobs baggy", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "magic design keepsakes", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "jumbo cards impossibottle", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "cheap-deepo cards", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "tip jar", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "rocks glasses x2", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "square card reader", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "matchstick puzzles set", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "lenses", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "large glass ball & base", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "impossi-puzzle", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "sculpting balloons", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "Phenakistoscope & animation discs", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "spade salt & pepper shakers", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "wands", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "playing card pens", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "paper miracles books and covers", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "cheap linking rings", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "anamorphic balloon picture", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "sign easel", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "spandex 6 foot table cover", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "plastic ziplock bags (various)", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "plastic containers", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "velvet material", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "doodle boards", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "yarn", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "Halloween magic record player sign", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "Ball Escape Tricks", "container": "BOX 013", "tub": "TUB C"}, {"item": "Various playing cards", "container": "BOX 014 (clear, unmarked tub)", "tub": "TUB C"}]};
+<script type="module">
+  // ============================================================
+  // 1) PASTE YOUR FIREBASE CONFIG HERE (see step 3 of the setup).
+  //    Everything else in this file works once this is filled in.
+  // ============================================================
+  const firebaseConfig = {
+    apiKey: "AIzaSyBPX92LvG_YfzzItuK48G6CLPKsWOak62Q",
+    authDomain: "box-manifest.firebaseapp.com",
+    projectId: "box-manifest",
+    storageBucket: "box-manifest.firebasestorage.app",
+    messagingSenderId: "20834298768",
+    appId: "1:20834298768:web:b72e81247fec555a78e115"
+  };
+  // ============================================================
 
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+  import {
+    getFirestore, collection, getDocs, doc, setDoc, addDoc, writeBatch, query, limit
+  } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+
+  const FALLBACK = {"tubs": ["TUB A", "TUB B", "TUB C"], "boxes": [{"name": "BOX 001", "tub": "TUB A"}, {"name": "BOX 002", "tub": "TUB A"}, {"name": "BOX 003", "tub": "TUB A"}, {"name": "BOX 004", "tub": "TUB A"}, {"name": "BOX 005", "tub": "TUB A"}, {"name": "BOX 006", "tub": "TUB A"}, {"name": "BOX 008 - General Magic", "tub": "TUB B"}, {"name": "BOX 009", "tub": "TUB B"}, {"name": "BOX 010", "tub": "TUB B"}, {"name": "BOX 011 - General Magic", "tub": "TUB B"}, {"name": "BOX 013", "tub": "TUB C"}, {"name": "BOX 014 (clear, unmarked tub)", "tub": "TUB C"}], "items": [{"item": "desk organizers", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "puzzle game knickknacks", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "cork sheets", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "cutting board", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "wood burner", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "hot glue gun & sticks", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "3Doodler", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "hypertiles", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "string/twine/thread", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "knives & needles", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "small shelf liner material", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "rubberbands", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "scrub sponges", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "tape/glue/staples", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "stapler", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "CA glue brushes", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "RGB glasses", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "heat gun", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "3 ring binder", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "address labels", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "measuring tapes", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "jewelers pliers set", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "elastic band & bendable ring strap", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "iPhone lens connectors", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "ziplock bags (various sizes)", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "various hardware (bearings, washers, bbs, lazy susan, etc)", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "whetstone", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "USB drives", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "3D printed phone stand", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "collected business cards", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "bubble mailers", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "harmonicas", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "utility tray", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "ink pad", "container": "TUB A (loose)", "tub": "TUB A"}, {"item": "Incurring supplies", "container": "BOX 001", "tub": "TUB A"}, {"item": "French curves", "container": "BOX 001", "tub": "TUB A"}, {"item": "square", "container": "BOX 001", "tub": "TUB A"}, {"item": "protractor", "container": "BOX 001", "tub": "TUB A"}, {"item": "colored sharpies", "container": "BOX 001", "tub": "TUB A"}, {"item": "Seance Game", "container": "BOX 002", "tub": "TUB A"}, {"item": "Leatherwork supplies", "container": "BOX 003", "tub": "TUB A"}, {"item": "16mm die punch", "container": "BOX 003", "tub": "TUB A"}, {"item": "Chisels and files", "container": "BOX 004", "tub": "TUB A"}, {"item": "Wood craft materials", "container": "BOX 005", "tub": "TUB A"}, {"item": "Binder Clips", "container": "BOX 006", "tub": "TUB A"}, {"item": "New playing cards", "container": "TUB B (loose)", "tub": "TUB B"}, {"item": "used playing cards", "container": "TUB B (loose)", "tub": "TUB B"}, {"item": "old playing cards", "container": "TUB B (loose)", "tub": "TUB B"}, {"item": "metal bits", "container": "TUB B (loose)", "tub": "TUB B"}, {"item": "wallets and coin purses", "container": "TUB B (loose)", "tub": "TUB B"}, {"item": "dice", "container": "TUB B (loose)", "tub": "TUB B"}, {"item": "coins", "container": "TUB B (loose)", "tub": "TUB B"}, {"item": "Stroop Test boards - original", "container": "TUB B (loose)", "tub": "TUB B"}, {"item": "TIDE keepsakes", "container": "TUB B (loose)", "tub": "TUB B"}, {"item": "Sven pads", "container": "TUB B (loose)", "tub": "TUB B"}, {"item": "Spongeballs", "container": "TUB B (loose)", "tub": "TUB B"}, {"item": "dice tray", "container": "TUB B (loose)", "tub": "TUB B"}, {"item": "Hooked", "container": "TUB B (loose)", "tub": "TUB B"}, {"item": "QR code trick", "container": "TUB B (loose)", "tub": "TUB B"}, {"item": "origami microfiber", "container": "TUB B (loose)", "tub": "TUB B"}, {"item": "bubbles", "container": "TUB B (loose)", "tub": "TUB B"}, {"item": "Ball Escape", "container": "TUB B (loose)", "tub": "TUB B"}, {"item": "glass marbles & paperweight", "container": "TUB B (loose)", "tub": "TUB B"}, {"item": "2x finger ring", "container": "TUB B (loose)", "tub": "TUB B"}, {"item": "sponge ball holdout", "container": "TUB B (loose)", "tub": "TUB B"}, {"item": "dice tray", "container": "TUB B (loose)", "tub": "TUB B"}, {"item": "number decoder group game", "container": "TUB B (loose)", "tub": "TUB B"}, {"item": "large kitchen matches", "container": "TUB B (loose)", "tub": "TUB B"}, {"item": "Large baby blanket", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "Flash cards memorized deck instructions", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "little thief instructions", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "persona box", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "they by Alan Rorrison", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "Brimz stickers", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "Chroma", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "Prophecy Pen", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "invisible elastic", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "binary trick laminated", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "clear force bag", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "rocky", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "aluminum cups", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "production bag (lunch sack)", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "thumb tips x2", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "black handkerchiefs x2", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "white handkerchiefs", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "Chinese sticks", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "birthday candle repeat", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "Point picture dictionary for travelers", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "shaped rubber bands", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "3D printed breakaway wand", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "Rubik's cube shaker", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "dice shaker", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "thumb tip holder", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "crazy cube", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "alien hand & cookie", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "Savant Deck box", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "card reveal condoms", "container": "BOX 008 - General Magic", "tub": "TUB B"}, {"item": "Gimmicked and gaffed cards", "container": "BOX 009", "tub": "TUB B"}, {"item": "roughing sticks", "container": "BOX 009", "tub": "TUB B"}, {"item": "Ropes", "container": "BOX 010", "tub": "TUB B"}, {"item": "paracord", "container": "BOX 010", "tub": "TUB B"}, {"item": "Coin slide", "container": "BOX 011 - General Magic", "tub": "TUB B"}, {"item": "firefly", "container": "BOX 011 - General Magic", "tub": "TUB B"}, {"item": "white chalk", "container": "BOX 011 - General Magic", "tub": "TUB B"}, {"item": "custom matchbox", "container": "BOX 011 - General Magic", "tub": "TUB B"}, {"item": "origami card box", "container": "BOX 011 - General Magic", "tub": "TUB B"}, {"item": "mousepads x2", "container": "BOX 011 - General Magic", "tub": "TUB B"}, {"item": "bell", "container": "BOX 011 - General Magic", "tub": "TUB B"}, {"item": "mini clothespins", "container": "BOX 011 - General Magic", "tub": "TUB B"}, {"item": "3D printed wooden ring", "container": "BOX 011 - General Magic", "tub": "TUB B"}, {"item": "large spring", "container": "BOX 011 - General Magic", "tub": "TUB B"}, {"item": "small brown gift boxes", "container": "BOX 011 - General Magic", "tub": "TUB B"}, {"item": "wooden playing card box", "container": "BOX 011 - General Magic", "tub": "TUB B"}, {"item": "wooden hinged box", "container": "BOX 011 - General Magic", "tub": "TUB B"}, {"item": "tiny wood turned box", "container": "BOX 011 - General Magic", "tub": "TUB B"}, {"item": "hinged aluminum tin", "container": "BOX 011 - General Magic", "tub": "TUB B"}, {"item": "plastic cylindrical box", "container": "BOX 011 - General Magic", "tub": "TUB B"}, {"item": "wooden number chips", "container": "BOX 011 - General Magic", "tub": "TUB B"}, {"item": "3D color vision", "container": "BOX 011 - General Magic", "tub": "TUB B"}, {"item": "saxophone", "container": "BOX 011 - General Magic", "tub": "TUB B"}, {"item": "Sven pads (another one bites the dust, bull shark)", "container": "BOX 011 - General Magic", "tub": "TUB B"}, {"item": "2 way notepads x2", "container": "BOX 011 - General Magic", "tub": "TUB B"}, {"item": "Antique boxes and magic", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "braille box", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "hexadecimal puzzle", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "bits n bobs baggy", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "magic design keepsakes", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "jumbo cards impossibottle", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "cheap-deepo cards", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "tip jar", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "rocks glasses x2", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "square card reader", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "matchstick puzzles set", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "lenses", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "large glass ball & base", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "impossi-puzzle", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "sculpting balloons", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "Phenakistoscope & animation discs", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "spade salt & pepper shakers", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "wands", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "playing card pens", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "paper miracles books and covers", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "cheap linking rings", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "anamorphic balloon picture", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "sign easel", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "spandex 6 foot table cover", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "plastic ziplock bags (various)", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "plastic containers", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "velvet material", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "doodle boards", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "yarn", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "Halloween magic record player sign", "container": "TUB C (loose)", "tub": "TUB C"}, {"item": "Ball Escape Tricks", "container": "BOX 013", "tub": "TUB C"}, {"item": "Various playing cards", "container": "BOX 014 (clear, unmarked tub)", "tub": "TUB C"}]};
   const STATE = { tubs: FALLBACK.tubs.slice(), boxes: FALLBACK.boxes.slice(), items: FALLBACK.items.slice() };
-  let dbRef = null; // resolved db capability, or null if unavailable
+
+  const isConfigured = firebaseConfig.apiKey && firebaseConfig.apiKey !== "YOUR_API_KEY";
+  let db = null;
+  if (isConfigured) {
+    const app = initializeApp(firebaseConfig);
+    db = getFirestore(app);
+  }
 
   const searchEl = document.getElementById('search');
   const resultsEl = document.getElementById('results');
@@ -153,6 +181,7 @@
   const submitBtn = document.getElementById('submitBtn');
   const addStatus = document.getElementById('addStatus');
   const offlineNote = document.getElementById('offlineNote');
+  const seedBtn = document.getElementById('seedBtn');
 
   const NEW_VALUE = '__new__';
   const LOOSE_VALUE = '__loose__';
@@ -268,7 +297,7 @@
 
   addForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    if (!dbRef) return;
+    if (!db) return;
 
     const itemName = newItemName.value.trim();
     if (!itemName) return;
@@ -304,12 +333,12 @@
 
     try {
       if (isNewTub) {
-        await dbRef.collection('tubs').doc(slug(tubName)).set({ name: tubName });
+        await setDoc(doc(db, 'tubs', slug(tubName)), { name: tubName });
       }
       if (newBox) {
-        await dbRef.collection('boxes').doc(slug(newBox.tub) + '__' + slug(newBox.name)).set(newBox);
+        await setDoc(doc(db, 'boxes', slug(newBox.tub) + '__' + slug(newBox.name)), newBox);
       }
-      await dbRef.collection('items').add({ item: itemName, container: container, tub: tubName });
+      await addDoc(collection(db, 'items'), { item: itemName, container: container, tub: tubName });
 
       if (isNewTub) STATE.tubs.push(tubName);
       if (newBox) STATE.boxes.push(newBox);
@@ -332,47 +361,64 @@
     submitBtn.disabled = false;
   });
 
-  async function loadFromDb() {
-    if (typeof claude === 'undefined' || !claude.use) {
+  // ---- One-time seed of the starter 154 items ----
+
+  seedBtn.addEventListener('click', async () => {
+    if (!db) return;
+    seedBtn.disabled = true;
+    seedBtn.textContent = 'Importing…';
+    try {
+      const batch = writeBatch(db);
+      FALLBACK.tubs.forEach(t => batch.set(doc(db, 'tubs', slug(t)), { name: t }));
+      FALLBACK.boxes.forEach(b => batch.set(doc(db, 'boxes', slug(b.tub) + '__' + slug(b.name)), b));
+      FALLBACK.items.forEach((it, i) => batch.set(doc(db, 'items', 'item-' + String(i + 1).padStart(4, '0')), it));
+      await batch.commit();
+      seedBtn.style.display = 'none';
+      await loadFromFirestore();
+    } catch (err) {
+      seedBtn.disabled = false;
+      seedBtn.textContent = 'Import failed — try again';
+    }
+  });
+
+  // ---- Load live data from Firestore ----
+
+  async function loadFromFirestore() {
+    if (!isConfigured) {
       toggleAddBtn.style.display = 'none';
       offlineNote.style.display = 'block';
+      offlineNote.textContent = 'Add your Firebase config near the top of this file to enable adding items.';
       return;
     }
     try {
-      const db = await claude.use('db');
-      if (!db) {
-        toggleAddBtn.style.display = 'none';
-        offlineNote.style.display = 'block';
-        return;
-      }
-      dbRef = db;
       const [tubsSnap, boxesSnap, itemsSnap] = await Promise.all([
-        db.collection('tubs').limit(1000).get(),
-        db.collection('boxes').limit(1000).get(),
-        db.collection('items').limit(1000).get(),
+        getDocs(query(collection(db, 'tubs'), limit(1000))),
+        getDocs(query(collection(db, 'boxes'), limit(1000))),
+        getDocs(query(collection(db, 'items'), limit(1000))),
       ]);
-      if (itemsSnap.docs.length) {
+
+      if (itemsSnap.size) {
         STATE.items = itemsSnap.docs.map(d => d.data());
+        seedBtn.style.display = 'none';
+      } else {
+        seedBtn.style.display = 'block';
       }
-      if (tubsSnap.docs.length) {
-        STATE.tubs = tubsSnap.docs.map(d => d.data().name).filter(Boolean);
-      }
-      if (boxesSnap.docs.length) {
-        STATE.boxes = boxesSnap.docs.map(d => d.data());
-      }
+      if (tubsSnap.size) STATE.tubs = tubsSnap.docs.map(d => d.data().name).filter(Boolean);
+      if (boxesSnap.size) STATE.boxes = boxesSnap.docs.map(d => d.data());
+
       updateSubhead();
       if (searchEl.value.trim()) renderResults(searchEl.value);
       if (!addForm.hidden) { populateTubSelect(); populateBoxSelect(); }
     } catch (err) {
       toggleAddBtn.style.display = 'none';
       offlineNote.style.display = 'block';
+      offlineNote.textContent = 'Could not reach Firestore — check your config and security rules. Search still works from the built-in snapshot.';
     }
   }
 
   updateSubhead();
   renderResults('');
-  loadFromDb();
-})();
+  loadFromFirestore();
 </script>
 </body>
 </html>
